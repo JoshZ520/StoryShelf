@@ -5,11 +5,11 @@ const doc = {
     title: 'StoryShelf API',
     description: 'Book management API with user authentication'
   },
-  host: 'localhost:3000',
-  schemes: ['http']
+  host: 'storyshelf.onrender.com',
+  schemes: ['https']
 };
 
 const outputFile = './swagger.json';
-const endpointsFiles = ['./routes/index.js'];
+const endpointsFiles = ['./routes/index.js', './routes/books.js'];
 
 swaggerAutogen(outputFile, endpointsFiles, doc);
