@@ -6,7 +6,7 @@ const doc = {
     description: 'Book management API with user authentication'
   },
   host: 'storyshelf.onrender.com',
-  schemes: ['https']
+  schemes: ['https', 'http']
 };
 
 const outputFile = './swagger.json';
