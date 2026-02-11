@@ -22,6 +22,34 @@
       },
       "post": {
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "title",
+                "author",
+                "isbn",
+                "publishedDate",
+                "genre",
+                "description",
+                "pages"
+              ],
+              "properties": {
+                "title": { "type": "string" },
+                "author": { "type": "string" },
+                "isbn": { "type": "string" },
+                "publishedDate": { "type": "string", "format": "date" },
+                "genre": { "type": "string" },
+                "description": { "type": "string" },
+                "pages": { "type": "integer", "minimum": 1 }
+              }
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -54,6 +82,23 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string" },
+                "author": { "type": "string" },
+                "isbn": { "type": "string" },
+                "publishedDate": { "type": "string", "format": "date" },
+                "genre": { "type": "string" },
+                "description": { "type": "string" },
+                "pages": { "type": "integer", "minimum": 1 }
+              }
+            }
           }
         ],
         "responses": {

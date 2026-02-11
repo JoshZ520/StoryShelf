@@ -12,20 +12,29 @@ const bookSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
-    isbn: {
+    series: {
       type: String,
-      required: true,
-      unique: true,
       trim: true
     },
-    publishedDate: {
-      type: Date,
-      required: true
+    seriesOrder: {
+      type: Number,
+      min: 1
     },
-    genre: {
+    publisher: {
       type: String,
-      required: true,
       trim: true
+    },
+    genres: {
+      type: [String],
+      default: []
+    },
+    tags: {
+      type: [String],
+      default: []
+    },
+    formatOptions: {
+      type: [String],
+      default: []
     },
     description: {
       type: String,
@@ -33,10 +42,9 @@ const bookSchema = new mongoose.Schema(
       trim: true,
       minlength: 10
     },
-    pages: {
-      type: Number,
-      required: true,
-      min: 1
+    coverImageUrl: {
+      type: String,
+      trim: true
     }
   },
   {
