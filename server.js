@@ -20,6 +20,9 @@ connectDb()
   .then(() => {
     app.listen(port, () => {
       console.log(`Server listening on ${port}`);
+      console.log(`Base URL: http://localhost:${port}`);
+      console.log(`Books: http://localhost:${port}/books`);
+      console.log(`Book by id: http://localhost:${port}/books/:id`);
     });
   })
   .catch((err) => {
