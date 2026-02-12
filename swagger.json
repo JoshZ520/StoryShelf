@@ -216,5 +216,67 @@
         }
       }
     }
+  },
+  "definitions": {
+    "BookInput": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "example": "The Hobbit"
+        },
+        "author": {
+          "type": "string",
+          "example": "J.R.R. Tolkien"
+        },
+        "series": {
+          "type": "string",
+          "example": "The Lord of the Rings"
+        },
+        "seriesOrder": {
+          "type": "number",
+          "example": 1
+        },
+        "publisher": {
+          "type": "string",
+          "example": "Allen & Unwin"
+        },
+        "genres": {
+          "type": "array",
+          "example": [
+            "Fantasy"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "example": [
+            "classic"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "formatOptions": {
+          "type": "array",
+          "example": [
+            "Hardcover"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string",
+          "example": "A fantasy novel."
+        },
+        "coverImageUrl": {
+          "type": "string",
+          "example": "https://example.com/cover.jpg"
+        }
+      }
+    }
   }
 }
