@@ -23,6 +23,17 @@
       },
       "post": {
         "description": "",
+        "parameters": [
+          {
+            "name": "book",
+            "in": "body",
+            "description": "Book payload",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BookInput"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -41,6 +52,17 @@
       },
       "post": {
         "description": "",
+        "parameters": [
+          {
+            "name": "book",
+            "in": "body",
+            "description": "Book payload",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BookInput"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -73,6 +95,15 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "book",
+            "in": "body",
+            "description": "Book payload",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BookInput"
+            }
           }
         ],
         "responses": {
@@ -191,6 +222,15 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "book",
+            "in": "body",
+            "description": "Book payload",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BookInput"
+            }
           }
         ],
         "responses": {

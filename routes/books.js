@@ -8,22 +8,28 @@ router.get('/', booksController.getAllBooks);
 router.get('/:id', booksController.getBookById);
 
 // POST create new book
-/* #swagger.parameters['book'] = {
-	in: 'body',
-	description: 'Book payload',
-	required: true,
-	schema: { $ref: '#/definitions/BookInput' }
-} */
-router.post('/', booksController.createBook);
+router.post(
+	'/',
+	/* #swagger.parameters['book'] = {
+		in: 'body',
+		description: 'Book payload',
+		required: true,
+		schema: { $ref: '#/definitions/BookInput' }
+	} */
+	booksController.createBook
+);
 
 // PUT update book by ID
-/* #swagger.parameters['book'] = {
-	in: 'body',
-	description: 'Book payload',
-	required: true,
-	schema: { $ref: '#/definitions/BookInput' }
-} */
-router.put('/:id', booksController.updateBook);
+router.put(
+	'/:id',
+	/* #swagger.parameters['book'] = {
+		in: 'body',
+		description: 'Book payload',
+		required: true,
+		schema: { $ref: '#/definitions/BookInput' }
+	} */
+	booksController.updateBook
+);
 
 // DELETE book by ID
 router.delete('/:id', booksController.deleteBook);
