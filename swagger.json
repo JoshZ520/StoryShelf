@@ -8,9 +8,28 @@
   "host": "storyshelf.onrender.com",
   "basePath": "/",
   "schemes": [
-    "https"
+    "https",
+    "http"
   ],
   "paths": {
+    "/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
     "/books/": {
       "get": {
         "description": "",
@@ -22,34 +41,6 @@
       },
       "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "required": [
-                "title",
-                "author",
-                "isbn",
-                "publishedDate",
-                "genre",
-                "description",
-                "pages"
-              ],
-              "properties": {
-                "title": { "type": "string" },
-                "author": { "type": "string" },
-                "isbn": { "type": "string" },
-                "publishedDate": { "type": "string", "format": "date" },
-                "genre": { "type": "string" },
-                "description": { "type": "string" },
-                "pages": { "type": "integer", "minimum": 1 }
-              }
-            }
-          }
-        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -82,23 +73,6 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "title": { "type": "string" },
-                "author": { "type": "string" },
-                "isbn": { "type": "string" },
-                "publishedDate": { "type": "string", "format": "date" },
-                "genre": { "type": "string" },
-                "description": { "type": "string" },
-                "pages": { "type": "integer", "minimum": 1 }
-              }
-            }
           }
         ],
         "responses": {
@@ -124,7 +98,7 @@
         }
       }
     },
-    "/": {
+    "/users/": {
       "get": {
         "description": "",
         "responses": {
@@ -138,6 +112,56 @@
         "responses": {
           "201": {
             "description": "Created"
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
