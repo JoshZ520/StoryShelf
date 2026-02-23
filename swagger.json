@@ -2,8 +2,11 @@
   "swagger": "2.0",
   "info": {
     "title": "StoryShelf API",
-    "description": "Book management API with user authentication",
-    "version": "1.0.0"
+    "description": "A comprehensive book management and user library platform API with Google OAuth authentication. StoryShelf allows users to manage their personal book collections, track reading progress, and organize their favorite books with tags and genres.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "StoryShelf Support"
+    }
   },
   "host": "storyshelf.onrender.com",
   "basePath": "/",
@@ -14,38 +17,54 @@
   "paths": {
     "/": {
       "get": {
-        "description": "",
+        "summary": "API Health Check",
+        "description": "Returns a status message confirming the StoryShelf API is running",
+        "tags": ["General"],
         "responses": {
           "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "description": "",
-        "responses": {
-          "201": {
-            "description": "Created"
+            "description": "API is running successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "StoryShelf API is running"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/books/": {
+    "/books": {
       "get": {
-        "description": "",
+        "summary": "Get all books",
+        "description": "Retrieve a list of all books in the library",
+        "tags": ["Books"],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successfully retrieved all books",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Book"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       },
       "post": {
-        "description": "",
+        "summary": "Create a new book",
+        "description": "Add a new book to the library. Requires title, author, and description.",
+        "tags": ["Books"],
         "parameters": [
           {
-            "name": "book",
+            "name": "body",
             "in": "body",
-            "description": "Book payload",
+            "description": "Book object to create",
             "required": true,
             "schema": {
               "$ref": "#/definitions/BookInput"
@@ -54,41 +73,73 @@
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Book successfully created",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          },
+          "400": {
+            "description": "Invalid input - missing required fields or validation failed"
+          },
+          "409": {
+            "description": "Conflict - duplicate entry"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
     },
     "/books/{id}": {
       "get": {
-        "description": "",
+        "summary": "Get a book by ID",
+        "description": "Retrieve a specific book using its MongoDB object ID",
+        "tags": ["Books"],
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "MongoDB book ID",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "example": "507f1f77bcf86cd799439011"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Book found and returned",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          },
+          "400": {
+            "description": "Invalid book ID format"
+          },
+          "404": {
+            "description": "Book not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       },
       "put": {
-        "description": "",
+        "summary": "Update a book",
+        "description": "Update one or more fields of an existing book",
+        "tags": ["Books"],
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "MongoDB book ID",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "example": "507f1f77bcf86cd799439011"
           },
           {
-            "name": "book",
+            "name": "body",
             "in": "body",
-            "description": "Book payload",
+            "description": "Updated book fields",
             "required": true,
             "schema": {
               "$ref": "#/definitions/BookInput"
@@ -97,192 +148,374 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Book successfully updated",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          },
+          "400": {
+            "description": "Invalid input or empty update body"
+          },
+          "404": {
+            "description": "Book not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       },
       "delete": {
-        "description": "",
+        "summary": "Delete a book",
+        "description": "Permanently remove a book from the library",
+        "tags": ["Books"],
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "MongoDB book ID",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "example": "507f1f77bcf86cd799439011"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Book successfully deleted",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Book deleted"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid book ID format"
+          },
+          "404": {
+            "description": "Book not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
     },
-    "/users/": {
+    "/users": {
       "get": {
-        "description": "",
+        "summary": "Get all users",
+        "description": "Retrieve a list of all users (passwords excluded). Includes their reading lists via population.",
+        "tags": ["Users"],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successfully retrieved all users",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       },
       "post": {
-        "description": "",
+        "summary": "Create a new user",
+        "description": "Register a new user account. Requires email, username, firstName, lastName, and password.",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User object to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserInput"
+            }
+          }
+        ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "User successfully created",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid input or validation failed"
+          },
+          "409": {
+            "description": "Email or username already exists"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
     },
     "/users/{id}": {
       "get": {
-        "description": "",
+        "summary": "Get a user by ID",
+        "description": "Retrieve a specific user and their reading list (passwords excluded)",
+        "tags": ["Users"],
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "MongoDB user ID",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "example": "507f1f77bcf86cd799439011"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/{id}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/google/start": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/google/callback": {
-      "get": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/logout": {
-      "get": {
-        "description": "",
-        "responses": {
+            "description": "User found and returned",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid user ID format"
+          },
+          "404": {
+            "description": "User not found"
+          },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a user",
+        "description": "Update one or more user profile fields",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "MongoDB user ID",
+            "required": true,
+            "type": "string",
+            "example": "507f1f77bcf86cd799439011"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Updated user fields",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully updated",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid input or empty update body"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a user",
+        "description": "Permanently remove a user account",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "MongoDB user ID",
+            "required": true,
+            "type": "string",
+            "example": "507f1f77bcf86cd799439011"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully deleted",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "User deleted"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid user ID format"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
     },
-    "/user": {
+    "/auth/google/start": {
       "get": {
-        "description": "",
+        "summary": "Start Google OAuth login",
+        "description": "Initiates the Google OAuth login flow. Redirects to Google's login page where user approves access.",
+        "tags": ["Authentication"],
+        "responses": {
+          "302": {
+            "description": "Redirects to Google login page"
+          }
+        }
+      }
+    },
+    "/auth/google/callback": {
+      "get": {
+        "summary": "Google OAuth callback",
+        "description": "Callback endpoint for Google OAuth. Handles user creation/authentication and session management. Redirects to dashboard on success.",
+        "tags": ["Authentication"],
+        "responses": {
+          "302": {
+            "description": "Redirects to dashboard on successful authentication"
+          },
+          "302": {
+            "description": "Redirects to home page on authentication failure"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "summary": "Logout user",
+        "description": "Destroys the user session and logs them out. Redirects to home page.",
+        "tags": ["Authentication"],
+        "responses": {
+          "302": {
+            "description": "Redirects to home page after logout"
+          },
+          "500": {
+            "description": "Logout failed"
+          }
+        }
+      }
+    },
+    "/auth/user": {
+      "get": {
+        "summary": "Get current authenticated user",
+        "description": "Returns the currently authenticated user's information. Requires active session.",
+        "tags": ["Authentication"],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successfully returned authenticated user",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "User is not authenticated"
           }
         }
       }
     }
   },
   "definitions": {
+    "Book": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "MongoDB object ID",
+          "example": "507f1f77bcf86cd799439011"
+        },
+        "title": {
+          "type": "string",
+          "description": "Book title",
+          "example": "The Hobbit"
+        },
+        "author": {
+          "type": "string",
+          "description": "Book author",
+          "example": "J.R.R. Tolkien"
+        },
+        "series": {
+          "type": "string",
+          "description": "Series name if part of a series",
+          "example": "The Lord of the Rings"
+        },
+        "seriesOrder": {
+          "type": "number",
+          "description": "Position in the series (must be >= 1)",
+          "example": 1
+        },
+        "publisher": {
+          "type": "string",
+          "description": "Publisher name",
+          "example": "Allen & Unwin"
+        },
+        "genres": {
+          "type": "array",
+          "description": "List of genres",
+          "items": {
+            "type": "string"
+          },
+          "example": ["Fantasy", "Adventure"]
+        },
+        "tags": {
+          "type": "array",
+          "description": "Custom tags for organization",
+          "items": {
+            "type": "string"
+          },
+          "example": ["classic", "epic"]
+        },
+        "formatOptions": {
+          "type": "array",
+          "description": "Available formats",
+          "items": {
+            "type": "string"
+          },
+          "example": ["Hardcover", "Paperback", "eBook"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Book synopsis or description",
+          "example": "A fantasy adventure tale of a hobbit's unexpected journey."
+        },
+        "coverImageUrl": {
+          "type": "string",
+          "description": "URL to book cover image",
+          "example": "https://example.com/book-cover.jpg"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp",
+          "example": "2024-01-15T10:30:00Z"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp",
+          "example": "2024-01-20T14:45:00Z"
+        }
+      }
+    },
     "BookInput": {
       "type": "object",
+      "required": ["title", "author", "description"],
       "properties": {
         "title": {
           "type": "string",
@@ -306,30 +539,24 @@
         },
         "genres": {
           "type": "array",
-          "example": [
-            "Fantasy"
-          ],
           "items": {
             "type": "string"
-          }
+          },
+          "example": ["Fantasy"]
         },
         "tags": {
           "type": "array",
-          "example": [
-            "classic"
-          ],
           "items": {
             "type": "string"
-          }
+          },
+          "example": ["classic"]
         },
         "formatOptions": {
           "type": "array",
-          "example": [
-            "Hardcover"
-          ],
           "items": {
             "type": "string"
-          }
+          },
+          "example": ["Hardcover"]
         },
         "description": {
           "type": "string",
@@ -338,6 +565,161 @@
         "coverImageUrl": {
           "type": "string",
           "example": "https://example.com/cover.jpg"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "MongoDB object ID",
+          "example": "507f1f77bcf86cd799439011"
+        },
+        "username": {
+          "type": "string",
+          "description": "Unique username (3-30 characters)",
+          "example": "bookworm_jane"
+        },
+        "email": {
+          "type": "string",
+          "description": "Unique email address",
+          "example": "jane@example.com"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "User's first name",
+          "example": "Jane"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "User's last name",
+          "example": "Doe"
+        },
+        "bio": {
+          "type": "string",
+          "description": "User biography (max 500 characters)",
+          "example": "Book enthusiast and fantasy lover"
+        },
+        "favoriteGenres": {
+          "type": "array",
+          "description": "User's favorite genres",
+          "items": {
+            "type": "string"
+          },
+          "example": ["Fantasy", "Sci-Fi"]
+        },
+        "readingGoal": {
+          "type": "number",
+          "description": "Annual reading goal",
+          "example": 24
+        },
+        "booksRead": {
+          "type": "number",
+          "description": "Number of books read",
+          "example": 12
+        },
+        "currentlyReading": {
+          "type": "array",
+          "description": "Array of book IDs currently being read",
+          "items": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "favorites": {
+          "type": "array",
+          "description": "Array of favorite book IDs",
+          "items": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "profileImageUrl": {
+          "type": "string",
+          "description": "URL to user's profile image",
+          "example": "https://example.com/profile.jpg"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Account creation timestamp",
+          "example": "2024-01-15T10:30:00Z"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last profile update timestamp",
+          "example": "2024-01-20T14:45:00Z"
+        }
+      }
+    },
+    "UserInput": {
+      "type": "object",
+      "required": ["username", "email", "firstName", "lastName", "password"],
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "Username (3-30 characters)",
+          "example": "bookworm_jane"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email address",
+          "example": "jane@example.com"
+        },
+        "firstName": {
+          "type": "string",
+          "example": "Jane"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Doe"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password (minimum 6 characters)",
+          "example": "SecurePass123"
+        },
+        "bio": {
+          "type": "string",
+          "example": "Book enthusiast"
+        },
+        "favoriteGenres": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "example": ["Fantasy"]
+        },
+        "readingGoal": {
+          "type": "number",
+          "example": 24
+        },
+        "profileImageUrl": {
+          "type": "string",
+          "example": "https://example.com/profile.jpg"
         }
       }
     }
