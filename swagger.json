@@ -23,17 +23,6 @@
       },
       "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "book",
-            "in": "body",
-            "description": "Book payload",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/BookInput"
-            }
-          }
-        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -222,15 +211,6 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "book",
-            "in": "body",
-            "description": "Book payload",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/BookInput"
-            }
           }
         ],
         "responses": {
@@ -252,6 +232,49 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/google/start": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/google/callback": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "description": "",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }

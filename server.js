@@ -1,14 +1,18 @@
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
-const cors = require('cors');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
-const routes = require('./routes');
-const errorHandler = require('./middleware/errorHandler');
-const connectDb = require('./db/connect');
 
 dotenv.config();
+
+const cors = require('cors');
+const session = require('express-session');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+const passport = require('./passport');
+const routes = require('./routes');
+const authRoutes = require('./routes/auth');
+const errorHandler = require('./middleware/errorHandler');
+const connectDb = require('./db/connect');
 
 const app = express();
 
@@ -17,7 +21,22 @@ app.use(cors());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Session configuration
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false } // Set to true in production with HTTPS
+  })
+);
+
+// Passport initialization
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/auth', authRoutes);
 app.use('/', routes);
 app.use(errorHandler);
 

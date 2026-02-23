@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StoryShelf - Dashboard</title>
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <h1>StoryShelf Dashboard</h1>
+      <div class="user-info">
+        <div class="user-details">
+          <h2 id="userName">Loading...</h2>
+          <p id="userEmail"></p>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h3>Welcome to StoryShelf!</h3>
+      <div class="placeholder">
+        <p>This is your personal library dashboard. More features coming soon!</p>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h3>My Books</h3>
+      <div class="placeholder">
+        <p>Your book collection will appear here.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Fetch current user info
+    async function loadUserInfo() {
+      try {
+        const response = await fetch('/auth/user');
+        if (response.ok) {
+          const user = await response.json();
+          document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
+          document.getElementById('userEmail').textContent = user.email;
+        } else {
+          // User not authenticated, redirect to home
+          window.location.href = '/';
+        }
+      } catch (error) {
+        console.error('Error loading user:', error);
+        window.location.href = '/';
+      }
+    }
+
+    function logout() {
+      window.location.href = '/auth/logout';
+    }
+
+    // Load user info on page load
+    loadUserInfo();
+  </script>
+</body>
+</html>
