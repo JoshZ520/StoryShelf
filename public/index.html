@@ -8,73 +8,21 @@
 </head>
 <body>
   <div class="login-container">
-    <h1> StoryShelf</h1>
+    <h1>📚 StoryShelf</h1>
+    <p style="text-align: center; margin: 20px 0; color: #666;">
+      Welcome! Please sign in with Google to access your bookshelf.
+    </p>
     
-    <form id="loginForm">
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-      </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-      </div>
-      <button type="submit">Login</button>
-    </form>
-
     <div class="oauth-buttons">
-      <button class="oauth-btn" onclick="loginWithGoogle()">Google</button>
-      <button class="oauth-btn" onclick="loginWithGitHub()">GitHub</button>
-    </div>
-
-    <div class="signup-link">
-      Don't have an account? <a href="/signup">Sign up</a>
+      <button class="oauth-btn" onclick="loginWithGoogle()">
+        Sign in with Google
+      </button>
     </div>
   </div>
 
   <script>
-    const loginForm = document.getElementById('loginForm');
-    
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      
-      try {
-        const response = await fetch('/users', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-            username: email.split('@')[0],
-            firstName: 'User',
-            lastName: 'Test'
-          })
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          alert('Login successful! User ID: ' + data._id);
-        } else {
-          alert('Login failed');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred');
-      }
-    });
-
     function loginWithGoogle() {
-      // Redirect to your backend OAuth endpoint
       window.location.href = '/auth/google/start';
-    }
-
-    function loginWithGitHub() {
-      alert('GitHub OAuth not yet configured');
     }
   </script>
 </body>

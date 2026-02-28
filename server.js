@@ -10,7 +10,6 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const passport = require('./passport');
 const routes = require('./routes');
-const authRoutes = require('./routes/auth');
 const errorHandler = require('./middleware/errorHandler');
 const connectDb = require('./db/connect');
 
@@ -36,7 +35,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use('/auth', authRoutes);
 app.use('/', routes);
 app.use(errorHandler);
 
@@ -45,8 +43,7 @@ connectDb()
   .then(() => {
     app.listen(port, () => {
       console.log(`Server listening on ${port}`);
-      console.log(`Base URL: http://localhost:${port}`);
-      console.log(`Books: http://localhost:${port}/api-docs/#/`);
+      console.log(`Google Login: https://storyshelf.onrender.com/auth/google/start`);
     });
   })
   .catch((err) => {
