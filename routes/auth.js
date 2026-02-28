@@ -20,10 +20,10 @@ router.get('/google/callback',
   /* #swagger.security = [] */
   /* #swagger.tags = ['Authentication']
      #swagger.description = 'Google OAuth callback. Handles authentication and creates user session. No authentication required to access this endpoint.' */
-  passport.authenticate('google', { failureRedirect: '/' }),
+  passport.authenticate('google', { failureRedirect: 'https://storyshelf.onrender.com/' }),
   (req, res) => {
-    // Successful authentication, redirect home or dashboard
-    res.redirect('/dashboard.html');
+    // Successful authentication, redirect to dashboard
+    res.redirect('https://storyshelf.onrender.com/dashboard.html');
   }
 );
 
@@ -40,7 +40,7 @@ router.get('/logout',
     if (err) {
       return res.status(500).json({ error: 'Logout failed' });
     }
-    res.redirect('/');
+    res.redirect('https://storyshelf.onrender.com/');
   });
 });
 
