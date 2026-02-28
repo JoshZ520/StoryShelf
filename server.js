@@ -43,6 +43,7 @@ connectDb()
   .then(() => {
     app.listen(port, () => {
       console.log(`Server listening on ${port}`);
+      console.log(`https://storyshelf.onrender.com/api-docs/#/`)
       console.log(`Google Login: https://storyshelf.onrender.com/auth/google/start`);
     });
   })
